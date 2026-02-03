@@ -1,0 +1,36 @@
+# [ODC-P4] Coding Standard & Dev Guide
+
+| 구분 | 내용 |
+| :--- | :--- |
+| **ID** | P-4 |
+| **Phase** | P4 |
+| **Status** | Draft v0.1 |
+| **Owner** | 김영섭 |
+| **Reviewer** | 김영섭 |
+
+## 1. 목적 (Purpose)
+본 문서는 `asv_project_ws` 저장소에서 코드 작성, 빌드, 실행, 로그, 브랜치 운영을 일관되게 수행하기 위한 개발 표준을 정의합니다. 누구든 본 문서만으로 동일한 재현 결과를 얻는 것을 목표로 합니다.
+
+## 2. 개발 환경 (Scope & Context)
+- **OS**: Ubuntu 22.04 LTS
+- **Framework**: [ROS 2 Humble](https://docs.ros.org)
+- **Build Tool**: colcon
+- **Shell**: bash
+- **VCS**: git
+
+## 3. 디렉토리 구조 및 규칙
+저장소는 아래 구조를 기준으로 사용하며, **ROS 2 패키지는 반드시 `src/` 하위에 생성**합니다.
+- `docs/`, `scripts/`, `src/`, `tools/`, `configs/`, `logs/`
+
+## 4. 빌드 및 실행 규칙
+- **스크립트 사용**: 빌드와 실행은 직접 명령어가 아닌 `scripts/` 내 스크립트를 통해 수행합니다.
+- **환경 설정**: ROS 2 환경 설정은 스크립트 내부에서 자동으로 처리합니다.
+- **로그 관리**: 모든 로그는 `logs/` 하위에 생성됩니다.
+  - 파일명 규칙: `build_<yyyymmdd_hhmmss>.log`
+
+## 5. 코드 스타일 및 운영
+- **브랜치**: `feature/<topic>`, `fix/<issue>`
+- **커밋**: `feat:`, `fix:`, `chore:` 등 [Conventional Commits](https://www.conventionalcommits.org) 준수
+- **명명 규칙**: ROS 2 패키지는 `snake_case` (소문자+언더스코어) 사용
+- **가이드**: Python [PEP 8](https://peps.python.org) 및 C++ 기본 스타일 가이드 준수
+- **금지 사항**: 하드코딩 경로 금지 (설정값은 `configs/`로 분리)
