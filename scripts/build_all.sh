@@ -1,32 +1,37 @@
 #!/bin/bash
 
-# [ODC-P4] Coding Standard: Build Script
-# Purpose: ROS 2 워크스페이스 통합 빌드 및 로그 자동화
+# [ODC-P4] Coding Standard: Run Script
+# Purpose: ROS 2 노드 실행 자동화 및 실행 로그 기록
 
-# 1. 필수 디렉토리 생성 (logs/ 폴더가 없을 경우 자동 생성)
+# 1. 필수 디렉토리 확인
 mkdir -p logs
 
-# 2. 로그 파일명 규칙 준수 (build_yyyymmdd_hhmmss.log)
-# date 명령어를 사용하여 타임스탬프를 생성합니다.
+# 2. 실행 로그 파일명 정의 (파일명 규칙 준수: run_yyyymmdd_hhmmss.log)
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-LOG_FILE="logs/build_${TIMESTAMP}.log"
+RUN_LOG="logs/run_${TIMESTAMP}.log"
 
-echo "-----------------------------------------------"
-echo "🚀 ASV Project Build 시작"
-echo "📂 로그 파일: ${LOG_FILE}"
-echo "-----------------------------------------------"
+echo "=========================================="
+echo "🚢 ASV Controller 실행을 시작합니다."
+echo "📂 실행 로그: ${RUN_LOG}"
+echo "=========================================="
 
-# 3. ROS 환경 설정 (Ubuntu 22.04 / ROS 2 Humble 기준)
-# 이미 환경이 로드되어 있을 수 있지만, 재현성을 위해 명시적으로 로드합니다.
-if [ -f "/opt/ros/humble/setup.bash" ]; then
-    source /opt/ros/humble/setup.bash
+# 3. 환경 설정 로드 (setup.bash)
+# 빌드 결과물(install 폴더)이 있는지 확인 후 로드합니다.
+if [ -f "install/setup.bash" ]; then
+    source install/setup.bash
+    echo "✅ 로컬 워크스페이스 환경 로드 완료."
+else
+    echo "❌ 에러: install/setup.bash 파일을 찾을 수 없습니다."
+    echo "💡 먼저 ./scripts/build_all.sh 를 실행하여 빌드해 주세요."
+    exit 1
 fi
 
-# 4. colcon build 수행
-# --symlink-install: 파이썬 소스 수정 시 다시 빌드하지 않아도 반영됨 (효율적)
-# 2>&1 | tee: 빌드 화면 출력을 터미널에 보여줌과 동시에 로그 파일로 저장
-colcon build --symlink-install 2>&1 | tee ${LOG_FILE}
+# 4. ROS 2 노드 실행 및 로그 기록
+# - 실행 중 발생하는 모든 출력(stdout, stderr)을 터미널에 뿌리면서 동시에 파일로 저장합니다.
+# - 패키지명: asv_controller (예시), 실행파일명: main_node (예시)
+# - 실제 패키지/노드 명칭에 맞춰 수정 가능합니다.
+ros2 run asv_controller main_node 2>&1 | tee ${RUN_LOG}
 
-echo "-----------------------------------------------"
-echo "✅ 빌드 완료 (Log: ${LOG_FILE})"
-echo "-----------------------------------------------"
+echo "=========================================="
+echo "🛑 실행이 종료되었습니다. (Log: ${RUN_LOG})"
+echo "=========================================="
