@@ -1,0 +1,19 @@
+# [ODC-P4] 표준 설정 파일: 하드코딩 경로 및 파라미터 분리
+
+# 프로젝트 기본 정보
+project:
+  name: "asv_project_ws"
+  owner: "김영섭"
+  version: "v0.1"
+
+# 가이드 준수: 경로 설정 (절대 경로 금지)
+paths:
+  log_dir: "logs"
+  config_dir: "configs"
+  script_dir: "scripts"
+
+# ASV 제어 파라미터 예시
+controller:
+  update_rate: 10
+  max_speed: 3.5  # m/s
+  safety_distance: 2.0
